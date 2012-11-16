@@ -1,13 +1,6 @@
 module KillerRspecRack
   module Matchers
-    def self.define_matcher(name, &declarations)
-      define_method name do |*expected|
-        return RSpec::Matchers::Matcher.new(name, *expected, &declarations) if defined? RSpec
-        return Spec::Matchers::Matcher.new(name, *expected, &declarations) if defined? Spec
-      end
-    end
-
-    define_matcher :be_ok_and_json do
+    RSpec::Matchers.define :be_ok_and_json do
       match do |response|
         response.ok? && KillerRspecRack::Matchers.has_content_type?(response, "application/json")
       end
@@ -21,7 +14,7 @@ module KillerRspecRack
       end
     end
 
-    define_matcher :be_unauthorized do
+    RSpec::Matchers.define :be_unauthorized do
       match do |response|
         response.status == 401
       end
@@ -43,7 +36,7 @@ module KillerRspecRack
       response.headers["Content-Type"].include? value.to_s
     end
 
-    define_matcher :have_header do |header, value|
+    RSpec::Matchers.define :have_header do |header, value|
       match do |response|
         KillerRspecRack::Matchers.has_header? response, header, value
       end
@@ -57,7 +50,7 @@ module KillerRspecRack
       end
     end
 
-    define_matcher :have_content_type do |value|
+    RSpec::Matchers.define :have_content_type do |value|
       match do |response|
         KillerRspecRack::Matchers.has_content_type? response, value
       end
@@ -71,7 +64,7 @@ module KillerRspecRack
       end
     end
 
-    define_matcher :have_content_length do |value|
+    RSpec::Matchers.define :have_content_length do |value|
       match do |response|
         KillerRspecRack::Matchers.has_header? response, "Content-Length", value
       end
